@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const usernameValidation = z
   .string()
-  .min(3, "Username must be atleast 6 characters")
+  .min(6, "Username must be atleast 6 characters")
   .max(20, "Username must not be more than 20 characters");
 
 export const signUpSchema = z.object({
