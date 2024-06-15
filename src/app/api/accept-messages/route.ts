@@ -36,7 +36,7 @@ export async function POST(request: Request) {
       return Response.json(
         {
           success: false,
-          messsage: "Failed to update user status to accept messages",
+          message: "Failed to update user status to accept messages",
         },
         { status: 401 }
       );
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     return Response.json(
       {
         success: true,
-        messsage: "Message acceptance status updated successfully",
+        message: "Message acceptance status updated successfully",
       },
       { status: 200 }
     );
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     return Response.json(
       {
         success: false,
-        messsage: "Failed to update user status to accept messages",
+        message: "Failed to update user status to accept messages",
       },
       { status: 500 }
     );
@@ -72,7 +72,7 @@ export async function GET(request: Request) {
     return Response.json(
       {
         success: false,
-        messsage: "Not Authenticated",
+        message: "Not Authenticated",
       },
       { status: 401 }
     );
@@ -87,7 +87,7 @@ export async function GET(request: Request) {
       return Response.json(
         {
           success: false,
-          messsage: "User not found",
+          message: "User not found",
         },
         { status: 404 }
       );
@@ -106,7 +106,7 @@ export async function GET(request: Request) {
     return Response.json(
       {
         success: false,
-        messsage: "Error in getting message acceptance status",
+        message: "Error in getting message acceptance status",
       },
       { status: 500 }
     );

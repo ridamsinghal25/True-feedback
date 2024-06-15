@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     return Response.json(
       {
         success: false,
-        messsage: "Not Authenticated",
+        message: "Not Authenticated",
       },
       { status: 401 }
     );
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
       return Response.json(
         {
           success: false,
-          messsage: "User not found",
+          message: "User not found",
         },
         { status: 401 }
       );
@@ -44,7 +44,7 @@ export async function GET(request: Request) {
     return Response.json(
       {
         success: true,
-        messsage: user[0].messages,
+        message: user[0].messages,
       },
       { status: 200 }
     );
@@ -53,7 +53,7 @@ export async function GET(request: Request) {
     return Response.json(
       {
         success: false,
-        messsage: "User not found",
+        message: "User not found",
       },
       { status: 500 }
     );

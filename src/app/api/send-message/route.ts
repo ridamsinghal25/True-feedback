@@ -15,7 +15,7 @@ export async function POST(request: Request) {
       return Response.json(
         {
           success: false,
-          messsage: "User not found",
+          message: "User not found",
         },
         { status: 404 }
       );
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       return Response.json(
         {
           success: false,
-          messsage: "User is not accepting messages",
+          message: "User is not accepting messages",
         },
         { status: 403 }
       );
@@ -42,7 +42,7 @@ export async function POST(request: Request) {
     return Response.json(
       {
         success: true,
-        messsage: "Message send successfully",
+        message: "Message send successfully",
       },
       { status: 200 }
     );
@@ -52,7 +52,7 @@ export async function POST(request: Request) {
     return Response.json(
       {
         success: false,
-        messsage: "Internal server error",
+        message: "Internal server error",
       },
       { status: 500 }
     );
