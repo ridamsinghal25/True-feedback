@@ -32,7 +32,7 @@ function Navbar() {
           )}
           {session ? (
             <>
-              <span className="mr-4">
+              <span className="mr-4 flex items-center">
                 Welcome, {user?.username || user?.email}
               </span>
               <Button
