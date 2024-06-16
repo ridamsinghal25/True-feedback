@@ -3,9 +3,7 @@
 import React from "react";
 import {
   Card,
-  CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -66,7 +64,7 @@ function MessageCard({ message, onMessageDelete }: MessageCardProps) {
     <Card>
       <CardHeader>
         <div className="w-full flex flex-row justify-between items-center">
-          <CardTitle>{message?.content}</CardTitle>
+          <CardTitle className="text-lg">{message?.content}</CardTitle>
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button variant="destructive" className="w-12 flex justify-end">
