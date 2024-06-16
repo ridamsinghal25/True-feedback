@@ -6,6 +6,7 @@ import {
   FormControl,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
@@ -19,22 +20,36 @@ import { useState } from "react";
 import { Textarea } from "@/components/ui/textarea";
 import { ApiResponse } from "@/types/ApiResponse";
 import { Separator } from "@/components/ui/separator";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { useCompletion } from "@ai-sdk/react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useParams } from "next/navigation";
+import { suggestMessageSchema } from "@/schemas/suggestMessageSchema";
+import { Input } from "@/components/ui/input";
+
+const specialChar = "||";
+
+const parseStringMessage = (messageString: string): string[] => {
+  return messageString.split(specialChar);
+};
 
 const initialMessageString =
   "What's your favorite movie?||Do you have any pets?||What's your dream job?";
 
-function PublicProfile({ params }: any) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+function PublicProfile() {
+  const params = useParams();
   const username = params.username;
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  const {
+    complete,
+    completion,
+    isLoading: isSuggestLoading,
+    error,
+  } = useCompletion({
+    api: "/api/suggest-message",
+    initialCompletion: initialMessageString,
+  });
 
   const form = useForm<z.infer<typeof messageSchema>>({
     resolver: zodResolver(messageSchema),
@@ -43,13 +58,19 @@ function PublicProfile({ params }: any) {
     },
   });
 
+  const messageContent = form.watch("content");
+
+  const handleClickChange = (message: string) => {
+    form.setValue("content", message);
+  };
+
   const onSubmit = async (data: z.infer<typeof messageSchema>) => {
     setIsSubmitting(true);
 
     try {
       const response = await axios.post("/api/send-message", {
         username,
-        content: data.content,
+        ...data,
       });
 
       toast({
@@ -67,6 +88,26 @@ function PublicProfile({ params }: any) {
       });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const suggestForm = useForm<z.infer<typeof suggestMessageSchema>>({
+    resolver: zodResolver(suggestMessageSchema),
+    defaultValues: {
+      suggestMessage: "",
+    },
+  });
+
+  const userMessage = suggestForm.watch("suggestMessage");
+
+  const fetchMessagesFromAI = async (
+    data: z.infer<typeof suggestMessageSchema>
+  ) => {
+    try {
+      const { suggestMessage } = data;
+      complete(suggestMessage);
+    } catch (error) {
+      console.log("Error while fetching suggest messages: ", error);
     }
   };
 
@@ -101,7 +142,7 @@ function PublicProfile({ params }: any) {
               )}
             />
             <div className="flex justify-center">
-              <Button type="submit" disabled={isSubmitting}>
+              <Button type="submit" disabled={isSubmitting || !messageContent}>
                 {isSubmitting ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -115,7 +156,50 @@ function PublicProfile({ params }: any) {
           </form>
         </Form>
       </div>
-      <Button className="mb-4">Suggest Message</Button>
+      <div>
+        <h1 className="text-2xl text-center font-bold mt-10 mb-4">
+          Ask AI for messages
+        </h1>
+        <Form {...suggestForm}>
+          <form
+            onSubmit={suggestForm.handleSubmit(fetchMessagesFromAI)}
+            className="space-y-6"
+          >
+            <FormField
+              control={suggestForm.control}
+              name="suggestMessage"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Provide your message context to AI</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Write your message to AI"
+                      className="resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="flex justify-center">
+              <Button
+                className="mb-4"
+                disabled={isSuggestLoading || !userMessage}
+              >
+                {isSuggestLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Please wait
+                  </>
+                ) : (
+                  "Suggest Message"
+                )}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </div>
       <Separator />
       <h2 className="mt-4 mb-4">Click on any message to select it</h2>
       <Card>
@@ -123,7 +207,19 @@ function PublicProfile({ params }: any) {
           <CardTitle>Messages</CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col space-y-4">
-          <Button variant="outline">What</Button>
+          {error ? (
+            <p className="text-red-500">{error.message}</p>
+          ) : (
+            parseStringMessage(completion).map((message, index) => (
+              <Button
+                key={index}
+                variant="outline"
+                onClick={() => handleClickChange(message)}
+              >
+                {message}
+              </Button>
+            ))
+          )}
         </CardContent>
       </Card>
     </div>
