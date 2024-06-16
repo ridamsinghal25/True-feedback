@@ -31,7 +31,17 @@ export async function GET(request: Request) {
       { $group: { _id: "$_id", messages: { $push: "$messages" } } },
     ]);
 
-    if (!user || user.length === 0) {
+    if (user?.length === 0) {
+      return Response.json(
+        {
+          success: true,
+          messages: [],
+        },
+        { status: 200 }
+      );
+    }
+
+    if (!user) {
       return Response.json(
         {
           success: false,
