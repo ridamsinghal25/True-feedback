@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ai-sdk/google": "^0.0.21",
+    "@ai-sdk/react": "^0.0.2",
     "@hookform/resolvers": "^3.6.0",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-label": "^2.0.2",
@@ -16,7 +18,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@radix-ui/react-switch": "^1.0.3",
     "@radix-ui/react-toast": "^1.1.5",
-    "ai": "^3.1.30",
+    "ai": "^3.1.36",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
@@ -28,7 +30,6 @@
     "mongoose": "^8.3.1",
     "next": "14.1.4",
     "next-auth": "^4.24.7",
-    "openai": "^4.49.1",
     "react": "^18",
     "react-dom": "^18",
     "react-email": "^2.1.1",
