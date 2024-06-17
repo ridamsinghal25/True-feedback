@@ -25,6 +25,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useParams } from "next/navigation";
 import { suggestMessageSchema } from "@/schemas/suggestMessageSchema";
 import { Input } from "@/components/ui/input";
+import { ModeToggle } from "@/components/ModeToggle";
 
 const specialChar = "||";
 
@@ -112,117 +113,134 @@ function PublicProfile() {
   };
 
   return (
-    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
-      <h1 className="text-4xl text-center font-bold mb-4">
-        Public Profile Link
-      </h1>
-      <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">
-          Send Anonymous Messages to @{username}
-        </h2>{" "}
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full space-y-6 "
-          >
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Write your anonymous message here"
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex justify-center">
-              <Button type="submit" disabled={isSubmitting || !messageContent}>
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Please wait
-                  </>
-                ) : (
-                  "Send it"
-                )}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </div>
-      <div>
-        <h1 className="text-2xl text-center font-bold mt-10 mb-4">
-          Ask AI for messages
+    <>
+      <nav className="p-4 md:p-6 shadow-md dark:shadow-gray-600 text-white">
+        <div className="container mx-auto flex flex-col md:flex-row items-center justify-end">
+          <ModeToggle />
+        </div>
+      </nav>
+      <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl  dark:bg-black">
+        <h1 className="text-4xl text-center font-bold mb-4 dark:text-gray-300">
+          Public Profile Link
         </h1>
-        <Form {...suggestForm}>
-          <form
-            onSubmit={suggestForm.handleSubmit(fetchMessagesFromAI)}
-            className="space-y-6"
-          >
-            <FormField
-              control={suggestForm.control}
-              name="suggestMessage"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Provide your message context to AI</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Write your message to AI"
-                      className="resize-none"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex justify-center">
-              <Button
-                className="mb-4"
-                disabled={isSuggestLoading || !userMessage}
-              >
-                {isSuggestLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Please wait
-                  </>
-                ) : (
-                  "Suggest Message"
+        <div className="mb-4">
+          <h2 className="text-lg font-semibold mb-2 dark:text-gray-400">
+            Send Anonymous Messages to @{username}
+          </h2>{" "}
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="w-full space-y-6 "
+            >
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Write your anonymous message here"
+                        className="resize-none dark:text-gray-300 dark:border-gray-500 dark:border-2"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </Button>
-            </div>
-          </form>
-        </Form>
+              />
+              <div className="flex justify-center">
+                <Button
+                  type="submit"
+                  disabled={isSubmitting || !messageContent}
+                  variant={"dark"}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Please wait
+                    </>
+                  ) : (
+                    "Send it"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
+        <div>
+          <h1 className="text-2xl text-center font-bold mt-10 mb-4 dark:text-gray-400">
+            Ask AI for messages
+          </h1>
+          <Form {...suggestForm}>
+            <form
+              onSubmit={suggestForm.handleSubmit(fetchMessagesFromAI)}
+              className="space-y-6"
+            >
+              <FormField
+                control={suggestForm.control}
+                name="suggestMessage"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="dark:text-gray-400">
+                      Provide your message context to AI
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Write your message to AI"
+                        className="resize-none dark:border-gray-500 dark:border-2 dark:text-gray-300"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex justify-center">
+                <Button
+                  className="mb-4"
+                  disabled={isSuggestLoading || !userMessage}
+                  variant={"dark"}
+                >
+                  {isSuggestLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Please wait
+                    </>
+                  ) : (
+                    "Suggest Message"
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
+        <Separator className="dark:bg-gray-400" />
+        <h2 className="mt-4 mb-4 dark:text-gray-400">
+          Click on any message to select it
+        </h2>
+        <Card>
+          <CardHeader>
+            <CardTitle className="dark:text-gray-400">Messages</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col space-y-4">
+            {error ? (
+              <p className="text-red-500">{error.message}</p>
+            ) : (
+              parseStringMessage(completion).map((message, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  className="dark:bg-black dark:text-gray-300 dark:border-2 dark:border-gray-500 dark:hover:text-gray-200"
+                  onClick={() => handleClickChange(message)}
+                >
+                  {message}
+                </Button>
+              ))
+            )}
+          </CardContent>
+        </Card>
       </div>
-      <Separator />
-      <h2 className="mt-4 mb-4">Click on any message to select it</h2>
-      <Card>
-        <CardHeader>
-          <CardTitle>Messages</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col space-y-4">
-          {error ? (
-            <p className="text-red-500">{error.message}</p>
-          ) : (
-            parseStringMessage(completion).map((message, index) => (
-              <Button
-                key={index}
-                variant="outline"
-                onClick={() => handleClickChange(message)}
-              >
-                {message}
-              </Button>
-            ))
-          )}
-        </CardContent>
-      </Card>
-    </div>
+    </>
   );
 }
 

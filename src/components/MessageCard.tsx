@@ -61,13 +61,18 @@ function MessageCard({ message, onMessageDelete }: MessageCardProps) {
   const formattedTime = date.toLocaleTimeString();
 
   return (
-    <Card>
+    <Card className="dark:border-slate-400 dark:border-2">
       <CardHeader>
         <div className="w-full flex flex-row justify-between items-center">
-          <CardTitle className="text-lg">{message?.content}</CardTitle>
+          <CardTitle className="text-lg dark:text-slate-400">
+            {message?.content}
+          </CardTitle>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" className="w-12 flex justify-end">
+              <Button
+                variant="destructive"
+                className="w-12 flex justify-end dark:bg-red-700"
+              >
                 <X className="w-5 h-5" />
               </Button>
             </AlertDialogTrigger>
@@ -88,7 +93,7 @@ function MessageCard({ message, onMessageDelete }: MessageCardProps) {
             </AlertDialogContent>
           </AlertDialog>
         </div>
-        <CardDescription className="text-blue-950">
+        <CardDescription className="text-blue-950 dark:text-slate-500">
           {formattedDate}, {formattedTime}
         </CardDescription>
       </CardHeader>
