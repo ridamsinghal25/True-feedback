@@ -1,6 +1,7 @@
 "use client";
 
 import MessageCard from "@/components/MessageCard";
+import UserDashboardSkeletion from "@/components/UserDashboardSkeleton";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
@@ -27,7 +28,7 @@ function UserDashboard() {
     setMessages(messages.filter((message) => message._id !== messageId));
   };
 
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const form = useForm({
     resolver: zodResolver(acceptMessageSchema),
@@ -105,7 +106,6 @@ function UserDashboard() {
       const response = await axios.post<ApiResponse>("/api/accept-messages", {
         acceptMessages: !acceptMessages,
       });
-
       setValue("acceptMessages", !acceptMessages);
 
       toast({
@@ -125,6 +125,14 @@ function UserDashboard() {
     }
   };
 
+  if (status === "loading") {
+    return <UserDashboardSkeletion />;
+  }
+
+  if (!session || !session.user) {
+    return <div></div>;
+  }
+
   const { username } = session?.user as User;
 
   // TODO: reserach it
@@ -140,24 +148,26 @@ function UserDashboard() {
     });
   };
 
-  if (!session || !session.user) {
-    return <div>Please Login</div>;
-  }
-
   return (
-    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
-      <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
+    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 dark:bg-black bg-white rounded w-full max-w-6xl">
+      <h1 className="text-4xl font-bold mb-4 dark:text-gray-300">
+        User Dashboard
+      </h1>
 
       <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{" "}
+        <h2 className="text-lg dark:text-gray-400 font-semibold mb-2">
+          Copy Your Unique Link
+        </h2>{" "}
         <div className="flex items-center">
           <input
             type="text"
             value={profileUrl}
             disabled
-            className="input input-bordered w-full p-2 mr-2"
+            className="dark:border-gray-500 dark:border-2 dark:text-gray-300 rounded w-full p-2 mr-2"
           />
-          <Button onClick={copyToClipboard}>Copy</Button>
+          <Button variant="dark" onClick={copyToClipboard}>
+            Copy
+          </Button>
         </div>
       </div>
 
@@ -168,14 +178,14 @@ function UserDashboard() {
           onCheckedChange={handleSwitchChange}
           disabled={isSwitchLoading}
         />
-        <span className="ml-2">
+        <span className="ml-2 dark:text-gray-400">
           Accept Messages: {acceptMessages ? "On" : "Off"}
         </span>
       </div>
-      <Separator />
+      <Separator className="dark:bg-gray-400" />
 
       <Button
-        className="mt-4"
+        className="mt-4 dark:border-gray-400 dark:border-2"
         variant="outline"
         onClick={(e) => {
           e.preventDefault();
